@@ -1,4 +1,4 @@
-package com.example;
+package com.example.calculator;
 
 import java.util.function.IntBinaryOperator;
 import java.util.Map;

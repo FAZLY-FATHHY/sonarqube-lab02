@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.Calculator;
+import com.example.calculator.Calculator;
 import java.util.logging.Logger;
 
 public class App {

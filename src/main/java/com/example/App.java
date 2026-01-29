@@ -10,4 +10,3 @@ service.findUser("admin");
 service.deleteUser("admin"); // NEW dangerous call
 }
 }
-

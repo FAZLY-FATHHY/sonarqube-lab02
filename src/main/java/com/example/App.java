@@ -1,44 +1,27 @@
 package com.example;
 
+import com.example.Calculator;
+import java.util.logging.Logger;
+
 public class App {
+
+    private static final Logger logger = Logger.getLogger(App.class.getName());
 
     public static void main(String[] args) {
 
-        // Create Calculator object
         Calculator calc = new Calculator();
-
-        // Perform addition
-        System.out.println("10 + 5 = " + calc.calculate(10, 5, "add"));
-
-        // Create UserService object and find user
-        UserService service = new UserService();
-        service.findUser("admin");
-    }
-}
-
-// Minimal Calculator class
-class Calculator {
-    public int calculate(int a, int b, String operation) {
-        switch (operation.toLowerCase()) {
-            case "add":
-                return a + b;
-            case "subtract":
-                return a - b;
-            case "multiply":
-                return a * b;
-            case "divide":
-                if (b != 0) return a / b;
-                else throw new IllegalArgumentException("Cannot divide by zero");
-            default:
-                throw new IllegalArgumentException("Unknown operation: " + operation);
+        int result = calc.calculate("add", 10, 5);
+        if (logger.isLoggable(java.util.logging.Level.INFO)) {
+            logger.info(String.format("Calculation result: %d", result));
         }
-    }
-}
 
-// Minimal UserService class
-class UserService {
-    public void findUser(String username) {
-        // Just a demo print
-        System.out.println("Finding user: " + username);
+        UserService service = new UserService();
+
+        try {
+            service.findUser("admin");
+        } catch (Exception e) {
+            logger.severe("Error fetching user: " + e.getMessage());
+            logger.severe(java.util.Arrays.toString(e.getStackTrace()));
+        }
     }
 }

@@ -1,37 +1,39 @@
+
 package com.example;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import java.util.logging.Logger;
 
 public class UserService {
 
-    // Read password from environment variable for security
-    private final String dbUser = "root";
-    private final String dbPassword = System.getenv("DB_PASSWORD"); // set DB_PASSWORD in your system
-    private final String dbUrl = "jdbc:mysql://localhost/db";
+    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
 
-    /**
-     * Finds a user safely using PreparedStatement to avoid SQL injection
-     */
-    public void findUser(String username) {
-        String query = "SELECT * FROM users WHERE name = ?";
+    // Use environment variables or config files instead of hardcoding
+    private static final String DB_URL = "jdbc:mysql://localhost/db";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
 
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+    // Secure method using PreparedStatement
+    public void findUser(String username) throws SQLException {
 
-            pstmt.setString(1, username); // safely set parameter
+        String query = "SELECT name FROM users WHERE name = ?";
 
-            ResultSet rs = pstmt.executeQuery();
+        try (
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            PreparedStatement ps = conn.prepareStatement(query)
+        ) {
+            ps.setString(1, username);
 
-            while (rs.next()) {
-                // For demonstration, print user info
-                System.out.println("Found user: " + rs.getString("name"));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    LOGGER.log(java.util.logging.Level.INFO, "User found: {0}", rs.getString("name"));
+                }
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

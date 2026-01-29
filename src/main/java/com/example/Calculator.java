@@ -1,21 +1,17 @@
 package com.example;
 
+import java.util.function.IntBinaryOperator;
+import java.util.Map;
+
 public class Calculator {
+    private Map<String, IntBinaryOperator> operations = Map.of(
+        "add", (a, b) -> a + b,
+        "subtract", (a, b) -> a - b,
+        "multiply", (a, b) -> a * b,
+        "divide", (a, b) -> a / b
+    );
 
-    // Refactored calculate method using switch expression (cleaner & simpler)
-    public int calculate(int a, int b, String op) {
-        return switch (op.toLowerCase()) {
-            case "add" -> a + b;
-            case "sub" -> a - b;
-            case "mul" -> a * b;
-            case "div" -> b != 0 ? a / b : 0; // handle division by zero
-            case "mod" -> b != 0 ? a % b : 0; // handle modulo by zero
-            default -> 0; // unknown operation
-        };
-    }
-
-    // Remove duplicate add methods, keep only one
-    public int add(int x, int y) {
-        return x + y;
+    public int calculate(String operation, int a, int b) {
+        return operations.get(operation).applyAsInt(a, b);
     }
 }
